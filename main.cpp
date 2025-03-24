@@ -35,14 +35,7 @@ int main() {
 
     // TODO: GET REQUEST with params
     // -----------------------------------------------------------------------------------------------------------------
-    CROW_ROUTE(app, "/hello/<int>")
-    ([](int count) {
-        if (count > 100)
-            return crow::response(400);
-        std::ostringstream os;
-        os << count << " bottles of beer!";
-        return crow::response(os.str());
-    });
+    CROW_ROUTE(app, "/questions/<int>")(SurveyController::getSingleQuestion);
 
     // example which uses only response as a parameter without request being a parameter.
     CROW_ROUTE(app, "/add/<int>/<int>")

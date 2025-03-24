@@ -1,7 +1,3 @@
-//
-// Created by HP ZBook 17 G5 on 24.3.2025 г..
-//
-
 #include "SurveyController.h"
 
 
@@ -26,6 +22,24 @@ crow::response SurveyController::submitQuestion(const crow::request &req) {
 
 
 crow::json::wvalue SurveyController::getQuestions() {
+    crow::json::wvalue response(fetchQuestions());
+
+    return response;
+}
+
+
+crow::json::wvalue SurveyController::getSingleQuestion(const int &questionId) {
+    const auto questions = fetchQuestions();
+
+    for (const crow::json::wvalue& question : questions)
+        if (question["id"].dump() == std::to_string(questionId))
+            return question;
+
+    return crow::json::wvalue();
+}
+
+
+std::vector<crow::json::wvalue> SurveyController::fetchQuestions() {
     std::vector<crow::json::wvalue> questions;
 
     std::ifstream fileStream{"C:\\Programming\\C++\\C++ProjectCLion\\questions.csv"};
@@ -43,7 +57,5 @@ crow::json::wvalue SurveyController::getQuestions() {
         entry["question"] = question;
         questions.push_back(entry);
     }
-
-    crow::json::wvalue response(questions);
-    return response;
+    return questions;
 }
