@@ -12,6 +12,8 @@ public:
 int main() {
     crow::SimpleApp app;
 
+
+    // TODO: GET REQUEST
     CROW_ROUTE(app, "/")
             .name("hello")([] {
                 return "Hello World!";
@@ -38,8 +40,7 @@ int main() {
             {"third", 54}, /* stores an int (as 54 is an int literal) hence a std::int64_t. */
             {"fourth", (int64_t) 54l}, /* stores a long (as 54l is a long literal) hence a std::int64_t. */
             {"fifth", 54u}, /* stores an unsigned int (as 54u is a unsigned int literal) hence a std::uint64_t. */
-            {"sixth", (uint64_t) 54ul},
-            /* stores an unsigned long (as 54ul is an unsigned long literal) hence a std::uint64_t. */
+            {"sixth", (uint64_t) 54ul}, /* stores an unsigned long (as 54ul is an unsigned long literal) hence a std::uint64_t. */
             {"seventh", 2.f}, /* stores a float (as 2.f is a float literal) hence a double. */
             {"eighth", 2.}, /* stores a double (as 2. is a double literal) hence a double. */
             {"ninth", nullptr}, /* stores a std::nullptr hence json::type::Null . */
@@ -55,6 +56,8 @@ int main() {
         return x;
     });
 
+
+    // TODO: GET REQUEST with params
     CROW_ROUTE(app, "/hello/<int>")
     ([](int count) {
         if (count > 100)
@@ -64,8 +67,7 @@ int main() {
         return crow::response(os.str());
     });
 
-    // example which uses only response as a paramter without
-    // request being a parameter.
+    // example which uses only response as a parameter without request being a parameter.
     CROW_ROUTE(app, "/add/<int>/<int>")
     ([](crow::response &res, int a, int b) {
         std::ostringstream os;
@@ -80,7 +82,8 @@ int main() {
     //return crow::response(500);
     //});
 
-    // more json example
+
+    // TODO: POST REQUEST
     CROW_ROUTE(app, "/add_json")
             .methods("POST"_method)([](const crow::request &req) {
                 auto x = crow::json::load(req.body);
@@ -108,6 +111,7 @@ int main() {
         }
         return crow::response{os.str()};
     });
+
 
     // ignore all log
     crow::logger::setLogLevel(crow::LogLevel::Debug);
