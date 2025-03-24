@@ -1,13 +1,9 @@
 # ninja log v6
-22	14941	7645170078900586	CMakeFiles/C__ProjectCLion.dir/main.cpp.obj	3f5a157035fb28ad
-858	999	7645157784542816	C__ProjectCLion.exe	f2a8ba033e1fd3e
-4	557	7645171492544609	build.ninja	c7d5cf747380cdde
-28	20968	7645171528844934	C__ProjectCLion.exe	d8568eb34c7a7b0d
-45	40629	7645268341332275	CMakeFiles/C__ProjectCLion.dir/main.cpp.obj	3f5a157035fb28ad
-40631	86387	7645268747179094	C__ProjectCLion.exe	d8568eb34c7a7b0d
-60	38588	7645300943152112	CMakeFiles/C__ProjectCLion.dir/main.cpp.obj	3f5a157035fb28ad
-38590	97875	7645301328446223	C__ProjectCLion.exe	d8568eb34c7a7b0d
-42	46293	7645324418604317	CMakeFiles/C__ProjectCLion.dir/main.cpp.obj	3f5a157035fb28ad
-46297	110013	7645324881146617	C__ProjectCLion.exe	d8568eb34c7a7b0d
 70	33265	7645328007956508	CMakeFiles/C__ProjectCLion.dir/main.cpp.obj	3f5a157035fb28ad
 33266	93784	7645328339909841	C__ProjectCLion.exe	d8568eb34c7a7b0d
+4	557	7645410575565481	build.ninja	c7d5cf747380cdde
+20	8238	7645415105278545	CMakeFiles/C__ProjectCLion.dir/src/SurveyController.cpp.obj	44cd762093b28aca
+14	17016	7645415105218491	CMakeFiles/C__ProjectCLion.dir/main.cpp.obj	3f5a157035fb28ad
+17017	40620	7645415275249682	C__ProjectCLion.exe	4ed439db58fa8995
+14	8207	7645416448993246	CMakeFiles/C__ProjectCLion.dir/src/SurveyController.cpp.obj	44cd762093b28aca
+8208	32488	7645416530937915	C__ProjectCLion.exe	4ed439db58fa8995

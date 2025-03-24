@@ -56,6 +56,13 @@ build CMakeFiles/C__ProjectCLion.dir/main.cpp.obj: CXX_COMPILER__C__ProjectCLion
   OBJECT_DIR = CMakeFiles\C__ProjectCLion.dir
   OBJECT_FILE_DIR = CMakeFiles\C__ProjectCLion.dir
 
+build CMakeFiles/C__ProjectCLion.dir/src/SurveyController.cpp.obj: CXX_COMPILER__C__ProjectCLion_unscanned_Debug C$:/Programming/C++/C++ProjectCLion/src/SurveyController.cpp || cmake_object_order_depends_target_C__ProjectCLion
+  DEP_FILE = CMakeFiles\C__ProjectCLion.dir\src\SurveyController.cpp.obj.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -isystem "C:/Users/HP ZBook 17 G5/.vcpkg-clion/vcpkg (1)/installed/x64-mingw-dynamic/include"
+  OBJECT_DIR = CMakeFiles\C__ProjectCLion.dir
+  OBJECT_FILE_DIR = CMakeFiles\C__ProjectCLion.dir\src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target C__ProjectCLion
@@ -64,7 +71,7 @@ build CMakeFiles/C__ProjectCLion.dir/main.cpp.obj: CXX_COMPILER__C__ProjectCLion
 #############################################
 # Link the executable C__ProjectCLion.exe
 
-build C__ProjectCLion.exe: CXX_EXECUTABLE_LINKER__C__ProjectCLion_Debug CMakeFiles/C__ProjectCLion.dir/main.cpp.obj
+build C__ProjectCLion.exe: CXX_EXECUTABLE_LINKER__C__ProjectCLion_Debug CMakeFiles/C__ProjectCLion.dir/main.cpp.obj CMakeFiles/C__ProjectCLion.dir/src/SurveyController.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lws2_32  -lmswsock  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\C__ProjectCLion.dir
