@@ -1,0 +1,77 @@
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+        std::stringstream firstNumStream{};
+        std::stringstream secondNumStream{};
+
+        while (true) {
+            firstNumStream << l1->val;
+            l1 = l1->next;
+            if (l1 == nullptr)
+                break;
+        }
+        while (true) {
+            secondNumStream << l2->val;
+            l2 = l2->next;
+            if (l2 == nullptr)
+                break;
+        }
+
+        std::string firstNumStr = firstNumStream.str(), secondNumStr = secondNumStream.str();
+        std::reverse(firstNumStr.begin(), firstNumStr.end());
+        std::reverse(secondNumStr.begin(), secondNumStr.end());
+
+        long long resultNumber = std::stoll(firstNumStr) + std::stoll(secondNumStr);
+        std::string resultNumberStr = std::to_string(resultNumber);
+
+        auto currentIter = resultNumberStr.begin();
+        ListNode* next = nullptr;
+
+        while (currentIter != resultNumberStr.end()) {
+            ListNode* current = new ListNode{*currentIter - '0', next};
+            next = current;
+            ++currentIter;
+        }
+
+        return next;
+    }
+};
+
+int main() {
+    // ListNode listNode3{3};
+    // ListNode listNode2{4, &listNode3};
+    ListNode listNode1{9, nullptr};
+
+
+    ListNode listNode10{9, nullptr};
+    ListNode listNode99{9, &listNode10};
+    ListNode listNode88{9, &listNode99};
+    ListNode listNode77{9, &listNode88};
+    ListNode listNode66{9, &listNode77};
+    ListNode listNode55{9, &listNode66};
+    ListNode listNode44{9, &listNode55};
+    ListNode listNode33{9, &listNode44};
+    ListNode listNode22{9, &listNode33};
+    ListNode listNode11{1, &listNode22};
+
+    Solution s;
+
+    auto ss = s.addTwoNumbers(&listNode1, &listNode11);
+
+    while (ss != nullptr) {
+        std::cout << ss->val;
+        ss = ss->next;
+    }
+}
