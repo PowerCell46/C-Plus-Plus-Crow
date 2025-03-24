@@ -1,6 +1,10 @@
 #include "crow_all.h"
 #include "./src/SurveyController.h"
 
+#define GET_ALL_QUESTIONS "/questions/get-all"
+#define GET_SINGLE_QUESTION "/questions/<int>"
+#define POST_SURVEY_SUBMIT "/survey/submit"
+
 
 class ExampleLogHandler : public crow::ILogHandler {
 public:
@@ -13,89 +17,22 @@ public:
 int main() {
     crow::SimpleApp app;
 
-    // GET REQUEST
+    // GET REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, "/json")
-    ([] {
-        crow::json::wvalue x({{"message", "Hello, World!"}});
-        x["message2"] = "Hello, World.. Again!";
-        return x;
-    });
-
-    CROW_ROUTE(app, "/questions/get-all")(SurveyController::getQuestions);
-
-    // json list response
-    CROW_ROUTE(app, "/json_list")
-    ([] {
-        crow::json::wvalue x(crow::json::wvalue::list({1, 2, 3}));
-        return x;
-    });
+    CROW_ROUTE(app, GET_ALL_QUESTIONS)(SurveyController::getQuestions);
 
 
-    // TODO: GET REQUEST with params
+    CROW_ROUTE(app, GET_SINGLE_QUESTION)(SurveyController::getSingleQuestion);
+
+
+    // POST REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
-    CROW_ROUTE(app, "/questions/<int>")(SurveyController::getSingleQuestion);
 
-    // example which uses only response as a parameter without request being a parameter.
-    CROW_ROUTE(app, "/add/<int>/<int>")
-    ([](crow::response &res, int a, int b) {
-        std::ostringstream os;
-        os << a + b;
-        res.write(os.str());
-        res.end();
-    });
-
-    // Compile error with message "Handler type is mismatched with URL paramters"
-    //CROW_ROUTE(app,"/another/<int>")
-    //([](int a, int b){
-    //return crow::response(500);
-    //});
+    CROW_ROUTE(app, POST_SURVEY_SUBMIT).methods("POST"_method)(SurveyController::submitQuestion);
 
 
-    // TODO: POST REQUEST
-    // -----------------------------------------------------------------------------------------------------------------
-    CROW_ROUTE(app, "/add_json")
-            .methods("POST"_method)([](const crow::request &req) {
-                auto x = crow::json::load(req.body);
-                if (!x)
-                    return crow::response(400);
-                int sum = x["a"].i() + x["b"].i();
-                std::ostringstream os;
-                os << sum;
-                return crow::response{os.str()};
-            });
-
-#if 0
-    {
-        "userId": 1,
-        "questionId": 1,
-        "content": "Answer of the first question, by the user PowerCell46."
-    }
-#endif
-    CROW_ROUTE(app, "/survey/submit")
-            .methods("POST"_method)(SurveyController::submitQuestion);
-
-
-    CROW_ROUTE(app, "/params")
-    ([](const crow::request &req) {
-        std::ostringstream os;
-        os << "Params: " << req.url_params << "\n\n";
-        os << "The key 'foo' was " << (req.url_params.get("foo") == nullptr ? "not " : "") << "found.\n";
-        if (req.url_params.get("pew") != nullptr) {
-            double countD = crow::utility::lexical_cast<double>(req.url_params.get("pew"));
-            os << "The value of 'pew' is " << countD << '\n';
-        }
-        auto count = req.url_params.get_list("count");
-        os << "The key 'count' contains " << count.size() << " value(s).\n";
-        for (const auto &countVal: count) {
-            os << " - " << countVal << '\n';
-        }
-        return crow::response{os.str()};
-    });
-
-
-    // TODO: PATCH request
+    // PATCH REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
     CROW_ROUTE(app, "/patch_example")
@@ -112,7 +49,7 @@ int main() {
             });
 
 
-    // TODO: DELETE request
+    // DELETE REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
     CROW_ROUTE(app, "/item/<int>")
@@ -125,13 +62,10 @@ int main() {
             });
 
 
-    // ignore all log
     // -----------------------------------------------------------------------------------------------------------------
+    // ignore all log
     crow::logger::setLogLevel(crow::LogLevel::Debug);
     //crow::logger::setHandler(std::make_shared<ExampleLogHandler>());
 
-    app.port(18080)
-            .server_name("CrowCpp")
-            .multithreaded()
-            .run();
+    app.port(18080).server_name("CrowCpp").multithreaded().run();
 }

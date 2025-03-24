@@ -57,5 +57,6 @@ std::vector<crow::json::wvalue> SurveyController::fetchQuestions() {
         entry["question"] = question;
         questions.push_back(entry);
     }
+
     return questions;
 }
