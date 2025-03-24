@@ -95,6 +95,29 @@ int main() {
                 return crow::response{os.str()};
             });
 
+#if 0
+    {
+        "userId": 1,
+        "questionId": 1,
+        "content": "Answer of the first question, by the user PowerCell46."
+    }
+#endif
+    CROW_ROUTE(app, "/survey/submit")
+        .methods("POST"_method)([](const crow::request &req) {
+            const auto requestBody = crow::json::load(req.body);
+            if (!requestBody)
+                return crow::response(400);
+
+            const int userId = requestBody["userId"].i();
+            const int questionId = requestBody["questionId"].i();
+            const std::string content = requestBody["content"].s();
+
+            std::ostringstream stringStream;
+            stringStream << "User id: " << userId << ", Question id: " << questionId << "\nContent: " << content << '\n';
+            return crow::response{stringStream.str()};
+        });
+
+
     CROW_ROUTE(app, "/params")
     ([](const crow::request &req) {
         std::ostringstream os;
