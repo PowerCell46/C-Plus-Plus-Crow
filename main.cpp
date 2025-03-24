@@ -1,6 +1,7 @@
 #include "crow_all.h"
 #include "./src/SurveyController.h"
 
+
 #define GET_ALL_QUESTIONS "/questions/get-all"
 #define GET_SINGLE_QUESTION "/questions/<int>"
 #define POST_SURVEY_SUBMIT "/survey/submit"
@@ -29,7 +30,7 @@ int main() {
     // POST REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, POST_SURVEY_SUBMIT).methods("POST"_method)(SurveyController::submitQuestion);
+    CROW_ROUTE(app, POST_SURVEY_SUBMIT).methods("POST"_method)(SurveyController::createQuestion);
 
 
     // PATCH REQUESTS

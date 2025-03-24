@@ -1,23 +1,22 @@
 #include "SurveyController.h"
 
 
-crow::response SurveyController::submitQuestion(const crow::request &req) {
+crow::json::wvalue SurveyController::createQuestion(const crow::request &req) {
     const auto requestBody = crow::json::load(req.body);
     if (!requestBody)
-        return crow::response(400);
+        return crow::json::wvalue();
 
-    const int userId = requestBody["userId"].i();
     const int questionId = requestBody["questionId"].i();
     const std::string content = requestBody["content"].s();
 
-    std::ostringstream stringStream;
-    stringStream << "User id: " << userId << ", Question id: " << questionId << "\nContent: " << content <<
-            '\n';
+    std::ofstream fileStream{"C:\\Programming\\C++\\C++ProjectCLion\\questions.csv", std::ios::app};
+    fileStream << '\n' << questionId << ',' << content;
 
-    std::ofstream fileStream{"C:\\Programming\\C++\\C++ProjectCLion\\file.txt", std::ios::app};
-    fileStream << stringStream.str();
+    crow::json::wvalue entry;
+    entry["id"] = questionId;
+    entry["question"] = content;
 
-    return crow::response{stringStream.str()};
+    return entry;
 }
 
 
@@ -60,3 +59,15 @@ std::vector<crow::json::wvalue> SurveyController::fetchQuestions() {
 
     return questions;
 }
+
+
+// crow::json::wvalue SurveyController::alterQuestion(const crow::request &req) {
+//     const auto requestBody = crow::json::load(req.body);
+//     if (!requestBody)
+//         return crow::json::wvalue();
+//
+//     const int questionId = requestBody["questionId"].i();
+//     const std::string content = requestBody["content"].s();
+//
+//     return;
+// }
