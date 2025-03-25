@@ -1,6 +1,9 @@
 #include "SurveyController.h"
 
 
+const std::string SurveyController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\questions.csv";
+
+
 crow::json::wvalue SurveyController::createQuestion(const crow::request &req) {
     const auto requestBody = crow::json::load(req.body);
     if (!requestBody)
@@ -9,7 +12,7 @@ crow::json::wvalue SurveyController::createQuestion(const crow::request &req) {
     const int questionId = requestBody["questionId"].i();
     const std::string content = requestBody["content"].s();
 
-    std::ofstream fileStream{"C:\\Programming\\C++\\C++ProjectCLion\\questions.csv", std::ios::app};
+    std::ofstream fileStream{QUESTIONS_CSV_FILE_PATH, std::ios::app};
     fileStream << '\n' << questionId << ',' << content;
 
     crow::json::wvalue entry;
@@ -30,7 +33,7 @@ crow::json::wvalue SurveyController::getQuestions() {
 crow::json::wvalue SurveyController::getSingleQuestion(const int &questionId) {
     const auto questions = fetchQuestions();
 
-    for (const crow::json::wvalue& question : questions)
+    for (const crow::json::wvalue &question: questions)
         if (question["id"].dump() == std::to_string(questionId))
             return question;
 
@@ -41,7 +44,7 @@ crow::json::wvalue SurveyController::getSingleQuestion(const int &questionId) {
 std::vector<crow::json::wvalue> SurveyController::fetchQuestions() {
     std::vector<crow::json::wvalue> questions;
 
-    std::ifstream fileStream{"C:\\Programming\\C++\\C++ProjectCLion\\questions.csv"};
+    std::ifstream fileStream{QUESTIONS_CSV_FILE_PATH};
     std::string currentLine;
 
     while (std::getline(fileStream, currentLine)) {
@@ -61,13 +64,36 @@ std::vector<crow::json::wvalue> SurveyController::fetchQuestions() {
 }
 
 
-// crow::json::wvalue SurveyController::alterQuestion(const crow::request &req) {
-//     const auto requestBody = crow::json::load(req.body);
-//     if (!requestBody)
-//         return crow::json::wvalue();
-//
-//     const int questionId = requestBody["questionId"].i();
-//     const std::string content = requestBody["content"].s();
-//
-//     return;
-// }
+crow::json::wvalue SurveyController::alterQuestion(const crow::request &req) {
+    const auto requestBody = crow::json::load(req.body);
+    if (!requestBody)
+        return crow::json::wvalue();
+
+    const int questionId = requestBody["questionId"].i();
+    const std::string newContent = requestBody["content"].s();
+
+    std::stringstream fileBufferStream{};
+    std::ifstream fileReadStream{QUESTIONS_CSV_FILE_PATH};
+
+    std::string currentLine;
+    while (std::getline(fileReadStream, currentLine)) {
+        std::stringstream currentLineStream{currentLine};
+        std::string currentIdStr, currentQuestion;
+        std::getline(currentLineStream, currentIdStr, ',');
+        std::getline(currentLineStream, currentQuestion, ',');
+
+        if (const int currentId = std::stoi(currentIdStr); currentId == questionId)
+            fileBufferStream << currentId << ',' << newContent << '\n';
+        else
+            fileBufferStream << currentLine << '\n';
+    }
+
+    std::ofstream fileWriteStream{QUESTIONS_CSV_FILE_PATH};
+    fileWriteStream << fileBufferStream.str();
+
+    crow::json::wvalue entry;
+    entry["id"] = questionId;
+    entry["question"] = newContent;
+
+    return entry;
+}

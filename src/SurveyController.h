@@ -3,6 +3,8 @@
 
 
 class SurveyController {
+    static const std::string QUESTIONS_CSV_FILE_PATH;
+
     static std::vector<crow::json::wvalue> fetchQuestions();
 
 public:
@@ -13,4 +15,6 @@ public:
     static crow::json::wvalue getSingleQuestion(const int &questionId);
 
     static crow::json::wvalue alterQuestion(const crow::request &req);
+
+    static crow::json::wvalue deleteQuestion(const int &questionId);
 };

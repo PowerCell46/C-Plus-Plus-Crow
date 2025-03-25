@@ -5,6 +5,7 @@
 #define GET_ALL_QUESTIONS "/questions/get-all"
 #define GET_SINGLE_QUESTION "/questions/<int>"
 #define POST_SURVEY_SUBMIT "/survey/submit"
+#define PATCH_SURVEY_ALTER "/questions/edit"
 
 
 class ExampleLogHandler : public crow::ILogHandler {
@@ -36,18 +37,9 @@ int main() {
     // PATCH REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, "/patch_example")
+    CROW_ROUTE(app, PATCH_SURVEY_ALTER)
             .methods("PATCH"_method)
-            ([](const crow::request &req) {
-                // Retrieve the request body
-                auto body = req.body;
-
-                CROW_LOG_INFO << "Received PATCH body: " << body;
-
-                crow::response res(200);
-                res.write("Patch request processed.");
-                return res;
-            });
+            (SurveyController::alterQuestion);
 
 
     // DELETE REQUESTS
