@@ -1,11 +1,13 @@
 #include "crow_all.h"
-#include "./src/SurveyController.h"
+#include "./src/QuestionController.h"
 
+#define SERVER_NAME "CrowSurvey"
+#define PORT 18080
 
 #define GET_ALL_QUESTIONS "/questions/get-all"
 #define GET_SINGLE_QUESTION "/questions/<int>"
-#define POST_SURVEY_SUBMIT "/survey/submit"
-#define PATCH_SURVEY_ALTER "/questions/edit"
+#define POST_QUESTIONS_SUBMIT "/questions/submit"
+#define PATCH_QUESTION "/questions/edit"
 #define DELETE_QUESTION "/questions/delete/<int>"
 
 
@@ -23,28 +25,28 @@ int main() {
     // GET REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, GET_ALL_QUESTIONS)(SurveyController::getQuestions);
+    CROW_ROUTE(app, GET_ALL_QUESTIONS)(QuestionController::getQuestions);
 
 
-    CROW_ROUTE(app, GET_SINGLE_QUESTION)(SurveyController::getSingleQuestion);
+    CROW_ROUTE(app, GET_SINGLE_QUESTION)(QuestionController::getSingleQuestion);
 
 
     // POST REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, POST_SURVEY_SUBMIT).methods("POST"_method)(SurveyController::createQuestion);
+    CROW_ROUTE(app, POST_QUESTIONS_SUBMIT).methods("POST"_method)(QuestionController::createQuestion);
 
 
     // PATCH REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, PATCH_SURVEY_ALTER).methods("PATCH"_method)(SurveyController::alterQuestion);
+    CROW_ROUTE(app, PATCH_QUESTION).methods("PATCH"_method)(QuestionController::alterQuestion);
 
 
     // DELETE REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, DELETE_QUESTION).methods("DELETE"_method)(SurveyController::deleteQuestion);
+    CROW_ROUTE(app, DELETE_QUESTION).methods("DELETE"_method)(QuestionController::deleteQuestion);
 
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -52,5 +54,5 @@ int main() {
     crow::logger::setLogLevel(crow::LogLevel::Debug);
     //crow::logger::setHandler(std::make_shared<ExampleLogHandler>());
 
-    app.port(18080).server_name("CrowCpp").multithreaded().run();
+    app.port(PORT).server_name(SERVER_NAME).multithreaded().run();
 }

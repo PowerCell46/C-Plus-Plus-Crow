@@ -1,10 +1,10 @@
-#include "SurveyController.h"
+#include "QuestionController.h"
 
 
-const std::string SurveyController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\questions.csv";
+const std::string QuestionController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\questions.csv";
 
 
-crow::json::wvalue SurveyController::createQuestion(const crow::request &req) {
+crow::json::wvalue QuestionController::createQuestion(const crow::request &req) {
     const auto requestBody = crow::json::load(req.body);
     if (!requestBody)
         return crow::json::wvalue();
@@ -23,14 +23,14 @@ crow::json::wvalue SurveyController::createQuestion(const crow::request &req) {
 }
 
 
-crow::json::wvalue SurveyController::getQuestions() {
+crow::json::wvalue QuestionController::getQuestions() {
     crow::json::wvalue response(fetchQuestions());
 
     return response;
 }
 
 
-crow::json::wvalue SurveyController::getSingleQuestion(const int &questionId) {
+crow::json::wvalue QuestionController::getSingleQuestion(const int &questionId) {
     const auto questions = fetchQuestions();
 
     for (const crow::json::wvalue &question: questions)
@@ -41,7 +41,7 @@ crow::json::wvalue SurveyController::getSingleQuestion(const int &questionId) {
 }
 
 
-std::vector<crow::json::wvalue> SurveyController::fetchQuestions() {
+std::vector<crow::json::wvalue> QuestionController::fetchQuestions() {
     std::vector<crow::json::wvalue> questions;
 
     std::ifstream fileStream{QUESTIONS_CSV_FILE_PATH};
@@ -64,7 +64,7 @@ std::vector<crow::json::wvalue> SurveyController::fetchQuestions() {
 }
 
 
-crow::json::wvalue SurveyController::alterQuestion(const crow::request &req) {
+crow::json::wvalue QuestionController::alterQuestion(const crow::request &req) {
     const auto requestBody = crow::json::load(req.body);
     if (!requestBody)
         return crow::json::wvalue();
@@ -99,7 +99,7 @@ crow::json::wvalue SurveyController::alterQuestion(const crow::request &req) {
 }
 
 
-crow::json::wvalue SurveyController::deleteQuestion(const int &questionId) {
+crow::json::wvalue QuestionController::deleteQuestion(const int &questionId) {
     std::stringstream fileBufferStream{};
     std::ifstream fileReadStream{QUESTIONS_CSV_FILE_PATH};
 

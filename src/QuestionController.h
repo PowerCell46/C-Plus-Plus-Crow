@@ -2,7 +2,7 @@
 #include "../crow_all.h"
 
 
-class SurveyController {
+class QuestionController {
     static const std::string QUESTIONS_CSV_FILE_PATH;
 
     static std::vector<crow::json::wvalue> fetchQuestions();

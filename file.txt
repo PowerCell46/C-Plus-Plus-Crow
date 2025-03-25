@@ -1,4 +1,0 @@
-User id: 2, Question id: 2
-Content: Answer of the second question, by the user PowerCellGaming.
-User id: 1, Question id: 1
-Content: Answer of the first question, by the user PowerCell46.
