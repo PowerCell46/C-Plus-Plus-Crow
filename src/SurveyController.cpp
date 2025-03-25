@@ -97,3 +97,28 @@ crow::json::wvalue SurveyController::alterQuestion(const crow::request &req) {
 
     return entry;
 }
+
+
+crow::json::wvalue SurveyController::deleteQuestion(const int &questionId) {
+    std::stringstream fileBufferStream{};
+    std::ifstream fileReadStream{QUESTIONS_CSV_FILE_PATH};
+
+    std::string currentLine;
+    while (std::getline(fileReadStream, currentLine)) {
+        std::stringstream currentLineStream{currentLine};
+        std::string currentIdStr, currentQuestion;
+        std::getline(currentLineStream, currentIdStr, ',');
+        std::getline(currentLineStream, currentQuestion, ',');
+
+        if (const int currentId = std::stoi(currentIdStr); currentId != questionId)
+            fileBufferStream << currentLine << '\n';
+    }
+
+    std::ofstream fileWriteStream{QUESTIONS_CSV_FILE_PATH};
+    fileWriteStream << fileBufferStream.str();
+
+    crow::json::wvalue entry;
+    entry["id"] = questionId;
+
+    return entry;
+}

@@ -6,6 +6,7 @@
 #define GET_SINGLE_QUESTION "/questions/<int>"
 #define POST_SURVEY_SUBMIT "/survey/submit"
 #define PATCH_SURVEY_ALTER "/questions/edit"
+#define DELETE_QUESTION "/questions/delete/<int>"
 
 
 class ExampleLogHandler : public crow::ILogHandler {
@@ -37,26 +38,17 @@ int main() {
     // PATCH REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, PATCH_SURVEY_ALTER)
-            .methods("PATCH"_method)
-            (SurveyController::alterQuestion);
+    CROW_ROUTE(app, PATCH_SURVEY_ALTER).methods("PATCH"_method)(SurveyController::alterQuestion);
 
 
     // DELETE REQUESTS
     // -----------------------------------------------------------------------------------------------------------------
 
-    CROW_ROUTE(app, "/item/<int>")
-            .methods("DELETE"_method)
-            ([](int submissionId) {
-
-                CROW_LOG_INFO << "Submission Id to delete: " << submissionId;
-
-                return crow::response(200, "Submission deleted successfully.");
-            });
+    CROW_ROUTE(app, DELETE_QUESTION).methods("DELETE"_method)(SurveyController::deleteQuestion);
 
 
     // -----------------------------------------------------------------------------------------------------------------
-    // ignore all log
+    // Ignore all log
     crow::logger::setLogLevel(crow::LogLevel::Debug);
     //crow::logger::setHandler(std::make_shared<ExampleLogHandler>());
 
