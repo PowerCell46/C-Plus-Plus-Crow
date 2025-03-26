@@ -9,6 +9,8 @@ add_executable(C__ProjectCLion main.cpp
         src/QuestionRelated/QuestionController.cpp
         src/SubmissionRelated/SubmissionController.cpp
         src/SubmissionRelated/SubmissionController.h
+        src/Common/Constants.cpp
+        src/Common/Constants.h
 )
 
 find_package(asio CONFIG REQUIRED)

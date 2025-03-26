@@ -1,10 +1,9 @@
 #include "SubmissionController.h"
 #include "../QuestionRelated/QuestionController.h"
-#include <cstdlib>
+#include "../Common/Constants.h"
 
 
 const std::string SubmissionController::SUBMISSIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\data\\submissions.csv";
-char CSV_DELIM = std::getenv("CSV_DELIM") ? std::getenv("CSV_DELIM")[0] : ',';
 
 
 crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) {
@@ -19,10 +18,10 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
     auto submissionsArray = requestBody["submissions"];
 
     std::ofstream fileStream{SUBMISSIONS_CSV_FILE_PATH, std::ios::app};
-    fileStream << (submissionId > 1 ? "\n" : "") << submissionId << CSV_DELIM << username << CSV_DELIM;
+    fileStream << (submissionId > 1 ? "\n" : "") << submissionId << CSV_DELIMITER << username << CSV_DELIMITER;
 
     for (size_t i = 0; i < submissionsArray.size() - 1; ++i)
-        fileStream << submissionsArray[i]["answer"].s() << CSV_DELIM;
+        fileStream << submissionsArray[i]["answer"].s() << CSV_DELIMITER;
     fileStream << submissionsArray[submissionsArray.size() - 1]["answer"].s();
 
     crow::json::wvalue entry;
@@ -45,7 +44,7 @@ std::vector<std::vector<std::string>> SubmissionController::fetchSubmissions() {
 
         std::stringstream currentLineStream{currentLine};
         std::string currentValue;
-        while (std::getline(currentLineStream, currentValue, CSV_DELIM))
+        while (std::getline(currentLineStream, currentValue, CSV_DELIMITER))
             currentSubmissionValues.push_back(currentValue);
 
         submissions.push_back(currentSubmissionValues);

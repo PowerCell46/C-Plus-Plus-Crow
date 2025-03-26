@@ -1,9 +1,8 @@
 #include "QuestionController.h"
-#include <cstdlib>
+#include "../Common/Constants.h"
 
 
 const std::string QuestionController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\data\\questions.csv";
-char CSV_DELIMITER = std::getenv("CSV_DELIMITER") ? std::getenv("CSV_DELIMITER")[0] : ',';
 
 
 crow::json::wvalue QuestionController::createQuestion(const crow::request &req) {
