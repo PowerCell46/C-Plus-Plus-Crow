@@ -10,9 +10,9 @@ class SubmissionController {
 public:
     static crow::json::wvalue submitSurvey(const crow::request &req);
 
-    // static crow::json::wvalue getSingleSubmission(const int &questionId);
+    static crow::json::wvalue getSubmissions();
 
-    // Get all submissions
+    // static crow::json::wvalue getSingleSubmission(const int &questionId);
 
     // Edit submission
 

@@ -1,18 +1,18 @@
 #include "crow_all.h"
 #include "./src/QuestionRelated/QuestionController.h"
-#include "./src/SubmissionRelated//SubmissionController.h"
+#include "./src/SubmissionRelated/SubmissionController.h"
+#include "./src/Common/Constants.h"
 
-#define SERVER_NAME "CrowSurvey"
-#define PORT 18080
 
 #define GET_ALL_QUESTIONS "/questions/get-all"
 #define GET_SINGLE_QUESTION "/questions/<int>"
 #define POST_QUESTIONS_SUBMIT "/questions/submit"
 #define PATCH_QUESTION "/questions/edit"
 #define DELETE_QUESTION "/questions/delete/<int>"
-
+//-----------------------------------------------
 #define POST_SURVEY_SUBMIT "/survey/submit"
-#define GET_SINGLE_SUBMISSION "/survey/submission/<int>"
+// #define GET_SINGLE_SUBMISSION "/survey/submissions/<int>"
+#define GET_ALL_SUBMISSIONS "/survey/submissions/get-all"
 
 
 class ExampleLogHandler : public crow::ILogHandler {
@@ -34,7 +34,8 @@ int main() {
 
     CROW_ROUTE(app, GET_SINGLE_QUESTION)(QuestionController::getSingleQuestion);
 
-    // CROW_ROUTE(app, GET_SINGLE_SUBMISSION)(QuestionController::getSingleQuestion);
+
+    CROW_ROUTE(app, GET_ALL_SUBMISSIONS)(SubmissionController::getSubmissions);
 
 
     // POST REQUESTS
@@ -63,5 +64,5 @@ int main() {
     crow::logger::setLogLevel(crow::LogLevel::Debug);
     //crow::logger::setHandler(std::make_shared<ExampleLogHandler>());
 
-    app.port(PORT).server_name(SERVER_NAME).multithreaded().run();
+    app.port(SERVER_PORT).server_name(SERVER_NAME).multithreaded().run();
 }

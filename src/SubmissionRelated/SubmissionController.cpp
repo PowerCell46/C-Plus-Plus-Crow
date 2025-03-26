@@ -71,32 +71,12 @@ std::vector<crow::json::wvalue> SubmissionController::fetchSubmissions() {
 }
 
 
+crow::json::wvalue SubmissionController::getSubmissions() {
+    crow::json::wvalue response(fetchSubmissions());
+
+    return response;}
+
+
 // crow::json::wvalue SubmissionController::getSingleSubmission(const int &questionId) {
-//     std::vector<crow::json::wvalue> questions;
 //
-//     std::ifstream fileStream{SUBMISSIONS_CSV_FILE_PATH};
-//     std::string currentLine;
-//
-//     while (std::getline(fileStream, currentLine)) {
-//         std::stringstream currentLineStream{currentLine};
-//         std::string currentValue;
-//         int position{};
-//
-//         crow::json::wvalue entry;
-//
-//         while (std::getline(currentLineStream, currentValue, CSV_DELIMITER)) {
-//             switch (position) {
-//                 case 0:
-//                     entry["id"] = currentValue;
-//                     break;
-//                 case 1:
-//                     entry["username"] = currentValue;
-//                     break;
-//                 default:
-//                     entry["question"]
-//
-//             }
-//             ++position;
-//         }
-//     }
 // }
