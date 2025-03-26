@@ -1,7 +1,9 @@
 #include "QuestionController.h"
+#include <cstdlib>
 
 
 const std::string QuestionController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\data\\questions.csv";
+char CSV_DELIMITER = std::getenv("CSV_DELIMITER") ? std::getenv("CSV_DELIMITER")[0] : ',';
 
 
 crow::json::wvalue QuestionController::createQuestion(const crow::request &req) {
@@ -13,7 +15,7 @@ crow::json::wvalue QuestionController::createQuestion(const crow::request &req) 
     const std::string content = requestBody["content"].s();
 
     std::ofstream fileStream{QUESTIONS_CSV_FILE_PATH, std::ios::app};
-    fileStream << '\n' << questionId << ',' << content;
+    fileStream << '\n' << questionId << CSV_DELIMITER << content;
 
     crow::json::wvalue entry;
     entry["id"] = questionId;
@@ -51,8 +53,8 @@ std::vector<crow::json::wvalue> QuestionController::fetchQuestions() {
     while (std::getline(fileStream, currentLine)) {
         std::stringstream currentLineStream{currentLine};
         std::string idStr, question;
-        std::getline(currentLineStream, idStr, ',');
-        std::getline(currentLineStream, question, ',');
+        std::getline(currentLineStream, idStr, CSV_DELIMITER);
+        std::getline(currentLineStream, question, CSV_DELIMITER);
         int id = std::stoi(idStr);
 
         crow::json::wvalue entry;
@@ -80,11 +82,11 @@ crow::json::wvalue QuestionController::alterQuestion(const crow::request &req) {
     while (std::getline(fileReadStream, currentLine)) {
         std::stringstream currentLineStream{currentLine};
         std::string currentIdStr, currentQuestion;
-        std::getline(currentLineStream, currentIdStr, ',');
-        std::getline(currentLineStream, currentQuestion, ',');
+        std::getline(currentLineStream, currentIdStr, CSV_DELIMITER);
+        std::getline(currentLineStream, currentQuestion, CSV_DELIMITER);
 
         if (const int currentId = std::stoi(currentIdStr); currentId == questionId)
-            fileBufferStream << currentId << ',' << newContent << '\n';
+            fileBufferStream << currentId << CSV_DELIMITER << newContent << '\n';
         else
             fileBufferStream << currentLine << '\n';
     }
@@ -108,8 +110,8 @@ crow::json::wvalue QuestionController::deleteQuestion(const int &questionId) {
     while (std::getline(fileReadStream, currentLine)) {
         std::stringstream currentLineStream{currentLine};
         std::string currentIdStr, currentQuestion;
-        std::getline(currentLineStream, currentIdStr, ',');
-        std::getline(currentLineStream, currentQuestion, ',');
+        std::getline(currentLineStream, currentIdStr, CSV_DELIMITER);
+        std::getline(currentLineStream, currentQuestion, CSV_DELIMITER);
 
         if (const int currentId = std::stoi(currentIdStr); currentId != questionId)
             fileBufferStream << currentLine << '\n';
