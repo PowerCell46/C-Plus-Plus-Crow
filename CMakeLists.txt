@@ -11,6 +11,8 @@ add_executable(C__ProjectCLion main.cpp
         src/SubmissionRelated/SubmissionController.h
         src/Common/Constants.cpp
         src/Common/Constants.h
+        src/UsersRelated/UserController.cpp
+        src/UsersRelated/UserController.h
 )
 
 find_package(asio CONFIG REQUIRED)

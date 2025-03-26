@@ -9,4 +9,33 @@ class SubmissionController {
 
 public:
     static crow::json::wvalue submitSurvey(const crow::request &req);
+
+    // static crow::json::wvalue getSingleSubmission(const int &questionId);
+
+    // Get all submissions
+
+    // Edit submission
+
+    // Delete submission
 };
+
+
+// ___________________________________
+// | user_id| questionId | answer    |
+// |_________________________________|
+// | 1      | 1          | my answer |
+// | 1      | 1          | my answer |
+// | 1      | 1          | my answer |
+// | 1      | 1          | my answer |
+// | 1      | 1          | my answer |
+// |_________________________________|
+//
+//
+// ________________
+// | id| username |
+// |______________|
+// | 1 | PowerCell|
+// | 1 | PowerCell|
+// | 1 | PowerCell|
+// | 1 | PowerCell|
+// |______________|

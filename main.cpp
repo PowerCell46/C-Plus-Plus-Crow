@@ -12,6 +12,7 @@
 #define DELETE_QUESTION "/questions/delete/<int>"
 
 #define POST_SURVEY_SUBMIT "/survey/submit"
+#define GET_SINGLE_SUBMISSION "/survey/submission/<int>"
 
 
 class ExampleLogHandler : public crow::ILogHandler {
@@ -32,6 +33,8 @@ int main() {
 
 
     CROW_ROUTE(app, GET_SINGLE_QUESTION)(QuestionController::getSingleQuestion);
+
+    // CROW_ROUTE(app, GET_SINGLE_SUBMISSION)(QuestionController::getSingleQuestion);
 
 
     // POST REQUESTS
