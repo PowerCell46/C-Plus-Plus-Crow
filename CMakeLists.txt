@@ -5,8 +5,10 @@ set(CMAKE_CXX_STANDARD 26)
 
 add_executable(C__ProjectCLion main.cpp
         crow_all.h
-        src/QuestionController.cpp
-        src/QuestionController.h
+        src/QuestionRelated/QuestionController.h
+        src/QuestionRelated/QuestionController.cpp
+        src/SubmissionRelated/SubmissionController.cpp
+        src/SubmissionRelated/SubmissionController.h
 )
 
 find_package(asio CONFIG REQUIRED)
