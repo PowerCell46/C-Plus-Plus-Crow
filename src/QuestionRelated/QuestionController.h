@@ -5,8 +5,6 @@
 class QuestionController {
     static const std::string QUESTIONS_CSV_FILE_PATH;
 
-    static std::vector<crow::json::wvalue> fetchQuestions();
-
 public:
     static crow::json::wvalue createQuestion(const crow::request &req);
 
@@ -17,4 +15,6 @@ public:
     static crow::json::wvalue alterQuestion(const crow::request &req);
 
     static crow::json::wvalue deleteQuestion(const int &questionId);
+
+    static std::vector<crow::json::wvalue> fetchQuestions();
 };

@@ -1,5 +1,6 @@
 #include "crow_all.h"
-#include "./src/QuestionController.h"
+#include "./src/QuestionRelated/QuestionController.h"
+#include "./src/SubmissionRelated//SubmissionController.h"
 
 #define SERVER_NAME "CrowSurvey"
 #define PORT 18080
@@ -9,6 +10,8 @@
 #define POST_QUESTIONS_SUBMIT "/questions/submit"
 #define PATCH_QUESTION "/questions/edit"
 #define DELETE_QUESTION "/questions/delete/<int>"
+
+#define POST_SURVEY_SUBMIT "/survey/submit"
 
 
 class ExampleLogHandler : public crow::ILogHandler {
@@ -35,6 +38,9 @@ int main() {
     // -----------------------------------------------------------------------------------------------------------------
 
     CROW_ROUTE(app, POST_QUESTIONS_SUBMIT).methods("POST"_method)(QuestionController::createQuestion);
+
+
+    CROW_ROUTE(app, POST_SURVEY_SUBMIT).methods("POST"_method)(SubmissionController::submitSurvey);
 
 
     // PATCH REQUESTS
