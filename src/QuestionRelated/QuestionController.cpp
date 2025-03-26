@@ -43,6 +43,7 @@ crow::json::wvalue QuestionController::getSingleQuestion(const int &questionId) 
 
 std::vector<crow::json::wvalue> QuestionController::fetchQuestions() {
     std::vector<crow::json::wvalue> questions;
+    questions.reserve(10);
 
     std::ifstream fileStream{QUESTIONS_CSV_FILE_PATH};
     std::string currentLine;

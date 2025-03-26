@@ -10,20 +10,44 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
     if (!requestBody)
         return crow::json::wvalue();
 
+    auto submissions = SubmissionController::fetchSubmissions();
+    const size_t submissionId = submissions.size() + 1;
+
     const std::string username = requestBody["username"].s();
     auto submissionsArray = requestBody["submissions"];
 
     std::ofstream fileStream{SUBMISSIONS_CSV_FILE_PATH, std::ios::app};
-    fileStream << '\n' << username << ',';
+    fileStream << '\n' << submissionId << ',' << username << ',';
 
     for (size_t i = 0; i < submissionsArray.size() - 1; ++i)
         fileStream << submissionsArray[i]["answer"].s() << ',';
     fileStream << submissionsArray[submissionsArray.size() - 1]["answer"].s();
 
     crow::json::wvalue entry;
-    //TODO: submissionId
-    // entry["submissionId"] = submissionId;
+    entry["submissionId"] = submissionId;
     entry["username"] = username;
 
     return entry;
+}
+
+
+std::vector<std::vector<std::string>> SubmissionController::fetchSubmissions() {
+    std::vector<std::vector<std::string>> submissions;
+    submissions.reserve(15);
+
+    std::ifstream fileStream{SUBMISSIONS_CSV_FILE_PATH};
+    std::string currentLine;
+
+    while (fileStream >> currentLine) {
+        std::vector<std::string> currentSubmissionValues;
+
+        std::stringstream currentLineStream{currentLine};
+        std::string currentValue;
+        while (std::getline(currentLineStream, currentValue, ','))
+            currentSubmissionValues.push_back(currentValue);
+
+        submissions.push_back(currentSubmissionValues);
+    }
+
+    return submissions;
 }
