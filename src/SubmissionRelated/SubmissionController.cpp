@@ -12,10 +12,8 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
     if (!requestBody)
         return crow::json::wvalue();
 
-    // TODO: Refactor the fetchSubmissions
-    // const auto submissions = SubmissionController::fetchSubmissions();
-    // size_t currentSubmissionId = submissions.size() + 1;
-    size_t currentSubmissionId = 3 + 1; // TODO: ATM THIS IS HARDCODED
+    const auto submissions = SubmissionController::fetchSubmissions();
+    size_t currentSubmissionId = submissions.size() + 1;
 
     size_t userId{};
     UserController::createUser(requestBody["username"].s(), userId);
@@ -30,6 +28,7 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
                 userId << CSV_DELIMITER << submissionsArray[i]["questionId"].i() << CSV_DELIMITER <<
                 submissionsArray[i]["answer"].s();
 
+    // TODO: Change the return type
     crow::json::wvalue entry;
     // entry["submissionId"] = submissionId;
     entry["username"] = requestBody["username"].s();
@@ -37,9 +36,9 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
     return entry;
 }
 
-// TODO: Change the return type and just count the occurrences
-std::vector<std::vector<std::string> > SubmissionController::fetchSubmissions() {
-    std::vector<std::vector<std::string> > submissions;
+
+std::vector<crow::json::wvalue> SubmissionController::fetchSubmissions() {
+    std::vector<crow::json::wvalue> submissions;
     submissions.reserve(15);
 
     std::ifstream fileStream{SUBMISSIONS_CSV_FILE_PATH};
@@ -50,10 +49,22 @@ std::vector<std::vector<std::string> > SubmissionController::fetchSubmissions() 
 
         std::stringstream currentLineStream{currentLine};
         std::string currentValue;
-        while (std::getline(currentLineStream, currentValue, CSV_DELIMITER))
-            currentSubmissionValues.push_back(currentValue);
 
-        submissions.push_back(currentSubmissionValues);
+        crow::json::wvalue entry;
+
+        std::getline(currentLineStream, currentValue, CSV_DELIMITER);
+        entry["id"] = std::stoi(currentValue);
+
+        std::getline(currentLineStream, currentValue, CSV_DELIMITER);
+        entry["userId"] = std::stoi(currentValue);
+
+        std::getline(currentLineStream, currentValue, CSV_DELIMITER);
+        entry["questionId"] = std::stoi(currentValue);
+
+        std::getline(currentLineStream, currentValue, CSV_DELIMITER);
+        entry["answer"] = currentValue;
+
+        submissions.push_back(entry);
     }
 
     return submissions;

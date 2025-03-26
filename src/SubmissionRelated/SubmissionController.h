@@ -5,7 +5,7 @@
 class SubmissionController {
     static const std::string SUBMISSIONS_CSV_FILE_PATH;
 
-    static std::vector<std::vector<std::string>> fetchSubmissions();
+    static std::vector<crow::json::wvalue> fetchSubmissions();
 
 public:
     static crow::json::wvalue submitSurvey(const crow::request &req);
@@ -29,13 +29,12 @@ public:
 // | 1      | 1          | my answer |
 // | 1      | 1          | my answer |
 // |_________________________________|
-//
-//
-// ________________
-// | id| username |
-// |______________|
-// | 1 | PowerCell|
-// | 1 | PowerCell|
-// | 1 | PowerCell|
-// | 1 | PowerCell|
-// |______________|
+
+// _________________
+// | id| username  |
+// |_______________|
+// | 1 | PowerCell |
+// | 1 | PowerCell |
+// | 1 | PowerCell |
+// | 1 | PowerCell |
+// |_______________|
