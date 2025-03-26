@@ -1,7 +1,7 @@
 #include "QuestionController.h"
 
 
-const std::string QuestionController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\questions.csv";
+const std::string QuestionController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\data\\questions.csv";
 
 
 crow::json::wvalue QuestionController::createQuestion(const crow::request &req) {
