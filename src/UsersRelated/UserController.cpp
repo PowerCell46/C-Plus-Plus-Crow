@@ -34,7 +34,7 @@ std::vector<crow::json::wvalue> UserController::fetchUsers() {
         std::getline(currentLineStream, currentValue, CSV_DELIMITER);
 
         crow::json::wvalue entry;
-        entry["id"] = std::stoi(currentValue);
+        entry["userId"] = std::stoi(currentValue);
 
         std::getline(currentLineStream, currentValue, CSV_DELIMITER);
         entry["username"] = currentValue;
@@ -43,4 +43,19 @@ std::vector<crow::json::wvalue> UserController::fetchUsers() {
     }
 
     return users;
+}
+
+
+std::map<int, std::string> UserController::fetchUsersMapping() {
+    std::map<int, std::string> result;
+
+    const std::vector<crow::json::wvalue> users = UserController::fetchUsers();
+
+    for (const crow::json::wvalue& user : users) {
+        int userId = std::stoi(user["userId"].dump());
+        std::string name = user["username"].dump();
+        result.insert({userId, std::string(name.begin() + 1, name.end() - 1)});
+    }
+
+    return result;
 }

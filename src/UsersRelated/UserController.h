@@ -8,5 +8,7 @@ class UserController {
 public:
     static std::vector<crow::json::wvalue> fetchUsers();
 
+    static std::map<int, std::string> fetchUsersMapping();
+
     static crow::json::wvalue createUser(const std::string& username);
 };

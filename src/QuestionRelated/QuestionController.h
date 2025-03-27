@@ -17,4 +17,6 @@ public:
     static crow::json::wvalue deleteQuestion(const int &questionId);
 
     static std::vector<crow::json::wvalue> fetchQuestions();
+
+    static std::map<int, std::string> fetchQuestionsMapping();
 };

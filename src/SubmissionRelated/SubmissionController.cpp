@@ -54,7 +54,7 @@ std::vector<crow::json::wvalue> SubmissionController::fetchSubmissions() {
         crow::json::wvalue entry;
 
         std::getline(currentLineStream, currentValue, CSV_DELIMITER);
-        entry["id"] = std::stoi(currentValue);
+        entry["submissionId"] = std::stoi(currentValue);
 
         std::getline(currentLineStream, currentValue, CSV_DELIMITER);
         entry["userId"] = std::stoi(currentValue);
@@ -73,9 +73,17 @@ std::vector<crow::json::wvalue> SubmissionController::fetchSubmissions() {
 
 
 crow::json::wvalue SubmissionController::getSubmissions() {
-    crow::json::wvalue response(fetchSubmissions());
+    std::map<int, std::string> questionsMapping = QuestionController::fetchQuestionsMapping();
+    std::map<int, std::string> usersMapping = UserController::fetchUsersMapping();
 
-    return response;
+    std::vector<crow::json::wvalue> submissions = fetchSubmissions();
+
+    for (crow::json::wvalue& submission : submissions) {
+        submission["username"] = usersMapping[std::stoi(submission["userId"].dump())];
+        submission["question"] = questionsMapping[std::stoi(submission["questionId"].dump())];
+    }
+
+    return submissions;
 }
 
 
@@ -154,7 +162,7 @@ crow::json::wvalue SubmissionController::deleteSubmission(const int &submissionI
     fileWriteStream << fileBufferStream.str();
 
     crow::json::wvalue entry;
-    entry["id"] = submissionId;
+    entry["submissionId"] = submissionId;
 
     return entry;
 }

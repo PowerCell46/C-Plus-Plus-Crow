@@ -17,7 +17,7 @@ crow::json::wvalue QuestionController::createQuestion(const crow::request &req) 
     fileStream << '\n' << questionId << CSV_DELIMITER << content;
 
     crow::json::wvalue entry;
-    entry["id"] = questionId;
+    entry["questionId"] = questionId;
     entry["question"] = content;
 
     return entry;
@@ -37,7 +37,7 @@ crow::json::wvalue QuestionController::getSingleQuestion(const int &questionId) 
     const auto questions = fetchQuestions();
 
     for (const crow::json::wvalue &question: questions)
-        if (question["id"].dump() == questionIdStr)
+        if (question["questionId"].dump() == questionIdStr)
             return question;
 
     return crow::json::wvalue();
@@ -54,19 +54,34 @@ std::vector<crow::json::wvalue> QuestionController::fetchQuestions() {
     while (std::getline(fileStream, currentLine)) {
         std::stringstream currentLineStream{currentLine};
 
-        std::string idStr, question;
-        std::getline(currentLineStream, idStr, CSV_DELIMITER);
+        std::string questionIdStr, question;
+        std::getline(currentLineStream, questionIdStr, CSV_DELIMITER);
         std::getline(currentLineStream, question, CSV_DELIMITER);
 
-        int id = std::stoi(idStr);
+        int questionId = std::stoi(questionIdStr);
 
         crow::json::wvalue entry;
-        entry["id"] = id;
+        entry["questionId"] = questionId;
         entry["question"] = question;
         questions.push_back(entry);
     }
 
     return questions;
+}
+
+
+std::map<int, std::string> QuestionController::fetchQuestionsMapping() {
+    std::map<int, std::string> result;
+
+    const std::vector<crow::json::wvalue> questions = QuestionController::fetchQuestions();
+
+    for (const crow::json::wvalue& question : questions) {
+        int questionId = std::stoi(question["questionId"].dump());
+        std::string questionContent = question["question"].dump();
+        result.insert({questionId, std::string(questionContent.begin() + 1, questionContent.end() - 1)});
+    }
+
+    return result;
 }
 
 
@@ -97,7 +112,7 @@ crow::json::wvalue QuestionController::alterQuestion(const crow::request &req) {
     fileWriteStream << fileBufferStream.str();
 
     crow::json::wvalue entry;
-    entry["id"] = questionId;
+    entry["questionId"] = questionId;
     entry["newContent"] = newContent;
 
     return entry;
