@@ -11,7 +11,7 @@ public:
     static crow::json::wvalue submitSurvey(const crow::request &req);
 
     static crow::json::wvalue getSubmissions();
-
+    // TODO: Join the data before sending to the user
     static crow::json::wvalue getSingleSubmission(const int &id);
 
     static crow::json::wvalue alterSubmission(const crow::request &req);

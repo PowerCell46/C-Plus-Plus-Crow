@@ -4,7 +4,8 @@
 #include "../Common/Constants.h"
 
 
-const std::string SubmissionController::SUBMISSIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\data\\submissions.csv";
+const std::string SubmissionController::SUBMISSIONS_CSV_FILE_PATH =
+        "C:\\Programming\\C++\\C++ProjectCLion\\data\\submissions.csv";
 
 
 crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) {
@@ -75,15 +76,60 @@ std::vector<crow::json::wvalue> SubmissionController::fetchSubmissions() {
 crow::json::wvalue SubmissionController::getSubmissions() {
     crow::json::wvalue response(fetchSubmissions());
 
-    return response;}
+    return response;
+}
 
 
 crow::json::wvalue SubmissionController::getSingleSubmission(const int &id) {
     const auto submissions = SubmissionController::fetchSubmissions();
 
-    for (const crow::json::wvalue& submission : submissions)
+    for (const crow::json::wvalue &submission: submissions)
         if (submission["id"].dump() == std::to_string(id))
             return submission;
 
     return crow::json::wvalue();
+}
+
+
+crow::json::wvalue SubmissionController::alterSubmission(const crow::request &req) {
+    const auto requestBody = crow::json::load(req.body);
+    if (!requestBody)
+        return crow::json::wvalue();
+
+    const int submissionId = requestBody["id"].i();
+    const std::string newAnswer = requestBody["newAnswer"].s();
+    std::string userId, questionId;
+
+    std::ifstream fileStream{SUBMISSIONS_CSV_FILE_PATH};
+    std::stringstream fileBufferStream{};
+    std::string currentLine;
+
+    while (std::getline(fileStream, currentLine)) {
+        std::stringstream currentLineStream{currentLine};
+
+        std::string currentIdStr;
+        std::getline(currentLineStream, currentIdStr, CSV_DELIMITER);
+
+        if (currentIdStr == std::to_string(submissionId)) {
+            std::getline(currentLineStream, userId, CSV_DELIMITER);
+            std::getline(currentLineStream, questionId, CSV_DELIMITER);
+
+            fileBufferStream << currentIdStr << CSV_DELIMITER <<
+                    userId << CSV_DELIMITER << questionId <<
+                    CSV_DELIMITER << newAnswer << '\n';
+
+        } else
+            fileBufferStream << currentLine << '\n';
+    }
+
+    std::ofstream fileWriteStream{SUBMISSIONS_CSV_FILE_PATH};
+    fileWriteStream << fileBufferStream.str();
+
+    crow::json::wvalue entry;
+    entry["id"] = submissionId;
+    entry["userId"] = userId;
+    entry["questionId"] = questionId;
+    entry["newAnswer"] = newAnswer;
+
+    return entry;
 }

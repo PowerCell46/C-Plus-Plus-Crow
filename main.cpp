@@ -13,6 +13,7 @@
 #define POST_SURVEY_SUBMIT "/survey/submit"
 #define GET_SINGLE_SUBMISSION "/survey/submissions/<int>"
 #define GET_ALL_SUBMISSIONS "/survey/submissions/get-all"
+#define PATCH_SUBMISSION "/survey/submissions/edit"
 
 
 class ExampleLogHandler : public crow::ILogHandler {
@@ -54,6 +55,9 @@ int main() {
     // -----------------------------------------------------------------------------------------------------------------
 
     CROW_ROUTE(app, PATCH_QUESTION).methods("PATCH"_method)(QuestionController::alterQuestion);
+
+
+    CROW_ROUTE(app, PATCH_SUBMISSION).methods("PATCH"_method)(SubmissionController::alterSubmission);
 
 
     // DELETE REQUESTS
