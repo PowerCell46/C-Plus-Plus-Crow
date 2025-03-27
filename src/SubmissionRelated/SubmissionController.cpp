@@ -15,8 +15,8 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
     const auto submissions = SubmissionController::fetchSubmissions();
     size_t currentSubmissionId = submissions.size() + 1;
 
-    size_t userId{};
-    UserController::createUser(requestBody["username"].s(), userId);
+    crow::json::wvalue users = UserController::createUser(requestBody["username"].s());
+    int userId = std::stoi(users["id"].dump());
 
     const auto submissionsArray = requestBody["submissions"];
 
@@ -27,6 +27,7 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
                 (currentSubmissionId > 1 ? "\n" : "") << (currentSubmissionId++) << CSV_DELIMITER <<
                 userId << CSV_DELIMITER << submissionsArray[i]["questionId"].i() << CSV_DELIMITER <<
                 submissionsArray[i]["answer"].s();
+
 
     // TODO: Change the return type
     crow::json::wvalue entry;
@@ -77,6 +78,12 @@ crow::json::wvalue SubmissionController::getSubmissions() {
     return response;}
 
 
-// crow::json::wvalue SubmissionController::getSingleSubmission(const int &questionId) {
-//
-// }
+crow::json::wvalue SubmissionController::getSingleSubmission(const int &id) {
+    const auto submissions = SubmissionController::fetchSubmissions();
+
+    for (const crow::json::wvalue& submission : submissions)
+        if (submission["id"].dump() == std::to_string(id))
+            return submission;
+
+    return crow::json::wvalue();
+}

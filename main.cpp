@@ -11,7 +11,7 @@
 #define DELETE_QUESTION "/questions/delete/<int>"
 //-----------------------------------------------
 #define POST_SURVEY_SUBMIT "/survey/submit"
-// #define GET_SINGLE_SUBMISSION "/survey/submissions/<int>"
+#define GET_SINGLE_SUBMISSION "/survey/submissions/<int>"
 #define GET_ALL_SUBMISSIONS "/survey/submissions/get-all"
 
 
@@ -36,6 +36,9 @@ int main() {
 
 
     CROW_ROUTE(app, GET_ALL_SUBMISSIONS)(SubmissionController::getSubmissions);
+
+
+    CROW_ROUTE(app, GET_SINGLE_SUBMISSION)(SubmissionController::getSingleSubmission);
 
 
     // POST REQUESTS

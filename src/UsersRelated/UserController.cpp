@@ -5,9 +5,9 @@
 const std::string UserController::USERS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\data\\users.csv";
 
 
-crow::json::wvalue UserController::createUser(const std::string &username, size_t& userId) {
+crow::json::wvalue UserController::createUser(const std::string &username) {
     const auto users = UserController::fetchUsers();
-    userId = users.size() + 1;
+    const size_t userId = users.size() + 1;
 
     std::ofstream fileStream{USERS_CSV_FILE_PATH, std::ios::app};
 

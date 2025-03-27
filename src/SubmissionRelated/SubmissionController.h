@@ -12,9 +12,9 @@ public:
 
     static crow::json::wvalue getSubmissions();
 
-    // static crow::json::wvalue getSingleSubmission(const int &questionId);
+    static crow::json::wvalue getSingleSubmission(const int &id);
 
-    // Edit submission
+    static crow::json::wvalue alterSubmission(const crow::request &req);
 
     // Delete submission
 };
