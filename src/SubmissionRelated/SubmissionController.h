@@ -16,7 +16,7 @@ public:
 
     static crow::json::wvalue alterSubmission(const crow::request &req);
 
-    // Delete submission
+    static crow::json::wvalue deleteSubmission(const int &id);
 };
 
 

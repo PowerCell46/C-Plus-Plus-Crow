@@ -1,5 +1,6 @@
 #include "QuestionController.h"
 #include "../Common/Constants.h"
+#include "../SubmissionRelated/SubmissionController.h"
 
 
 const std::string QuestionController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\data\\questions.csv";
@@ -121,6 +122,30 @@ crow::json::wvalue QuestionController::deleteQuestion(const int &questionId) {
 
     crow::json::wvalue entry;
     entry["id"] = questionId;
+
+    return entry;
+}
+
+
+crow::json::wvalue SubmissionController::deleteSubmission(const int &id) {
+    std::stringstream fileBufferStream{};
+    std::ifstream fileReadStream{SUBMISSIONS_CSV_FILE_PATH};
+    std::string currentLine;
+
+    while (std::getline(fileReadStream, currentLine)) {
+        std::stringstream currentLineStream{currentLine};
+        std::string currentIdStr;
+        std::getline(currentLineStream, currentIdStr, CSV_DELIMITER);
+
+        if (currentIdStr != std::to_string(id))
+            fileBufferStream << currentLine << '\n';
+    }
+
+    std::ofstream fileWriteStream{SUBMISSIONS_CSV_FILE_PATH};
+    fileWriteStream << fileBufferStream.str();
+
+    crow::json::wvalue entry;
+    entry["id"] = id;
 
     return entry;
 }
