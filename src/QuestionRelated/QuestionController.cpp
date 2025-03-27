@@ -1,6 +1,5 @@
 #include "QuestionController.h"
 #include "../Common/Constants.h"
-#include "../SubmissionRelated/SubmissionController.h"
 
 
 const std::string QuestionController::QUESTIONS_CSV_FILE_PATH = "C:\\Programming\\C++\\C++ProjectCLion\\data\\questions.csv";
@@ -33,10 +32,12 @@ crow::json::wvalue QuestionController::getQuestions() {
 
 
 crow::json::wvalue QuestionController::getSingleQuestion(const int &questionId) {
+    const std::string questionIdStr = std::to_string(questionId);
+
     const auto questions = fetchQuestions();
 
     for (const crow::json::wvalue &question: questions)
-        if (question["id"].dump() == std::to_string(questionId))
+        if (question["id"].dump() == questionIdStr)
             return question;
 
     return crow::json::wvalue();
@@ -52,9 +53,11 @@ std::vector<crow::json::wvalue> QuestionController::fetchQuestions() {
 
     while (std::getline(fileStream, currentLine)) {
         std::stringstream currentLineStream{currentLine};
+
         std::string idStr, question;
         std::getline(currentLineStream, idStr, CSV_DELIMITER);
         std::getline(currentLineStream, question, CSV_DELIMITER);
+
         int id = std::stoi(idStr);
 
         crow::json::wvalue entry;
@@ -73,7 +76,7 @@ crow::json::wvalue QuestionController::alterQuestion(const crow::request &req) {
         return crow::json::wvalue();
 
     const int questionId = requestBody["questionId"].i();
-    const std::string newContent = requestBody["content"].s();
+    const std::string newContent = requestBody["newContent"].s();
 
     std::stringstream fileBufferStream{};
     std::ifstream fileReadStream{QUESTIONS_CSV_FILE_PATH};
@@ -81,9 +84,8 @@ crow::json::wvalue QuestionController::alterQuestion(const crow::request &req) {
     std::string currentLine;
     while (std::getline(fileReadStream, currentLine)) {
         std::stringstream currentLineStream{currentLine};
-        std::string currentIdStr, currentQuestion;
+        std::string currentIdStr;
         std::getline(currentLineStream, currentIdStr, CSV_DELIMITER);
-        std::getline(currentLineStream, currentQuestion, CSV_DELIMITER);
 
         if (const int currentId = std::stoi(currentIdStr); currentId == questionId)
             fileBufferStream << currentId << CSV_DELIMITER << newContent << '\n';
@@ -96,7 +98,7 @@ crow::json::wvalue QuestionController::alterQuestion(const crow::request &req) {
 
     crow::json::wvalue entry;
     entry["id"] = questionId;
-    entry["question"] = newContent;
+    entry["newContent"] = newContent;
 
     return entry;
 }
@@ -109,9 +111,8 @@ crow::json::wvalue QuestionController::deleteQuestion(const int &questionId) {
     std::string currentLine;
     while (std::getline(fileReadStream, currentLine)) {
         std::stringstream currentLineStream{currentLine};
-        std::string currentIdStr, currentQuestion;
+        std::string currentIdStr;
         std::getline(currentLineStream, currentIdStr, CSV_DELIMITER);
-        std::getline(currentLineStream, currentQuestion, CSV_DELIMITER);
 
         if (const int currentId = std::stoi(currentIdStr); currentId != questionId)
             fileBufferStream << currentLine << '\n';
@@ -121,31 +122,7 @@ crow::json::wvalue QuestionController::deleteQuestion(const int &questionId) {
     fileWriteStream << fileBufferStream.str();
 
     crow::json::wvalue entry;
-    entry["id"] = questionId;
-
-    return entry;
-}
-
-
-crow::json::wvalue SubmissionController::deleteSubmission(const int &id) {
-    std::stringstream fileBufferStream{};
-    std::ifstream fileReadStream{SUBMISSIONS_CSV_FILE_PATH};
-    std::string currentLine;
-
-    while (std::getline(fileReadStream, currentLine)) {
-        std::stringstream currentLineStream{currentLine};
-        std::string currentIdStr;
-        std::getline(currentLineStream, currentIdStr, CSV_DELIMITER);
-
-        if (currentIdStr != std::to_string(id))
-            fileBufferStream << currentLine << '\n';
-    }
-
-    std::ofstream fileWriteStream{SUBMISSIONS_CSV_FILE_PATH};
-    fileWriteStream << fileBufferStream.str();
-
-    crow::json::wvalue entry;
-    entry["id"] = id;
+    entry["questionId"] = questionId;
 
     return entry;
 }

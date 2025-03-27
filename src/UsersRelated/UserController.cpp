@@ -14,12 +14,11 @@ crow::json::wvalue UserController::createUser(const std::string &username) {
     fileStream << (userId > 1 ? "\n" : "") << userId << CSV_DELIMITER << username;
 
     crow::json::wvalue entry;
-    entry["id"] = userId;
+    entry["userId"] = userId;
     entry["username"] = username;
 
     return entry;
 }
-
 
 
 std::vector<crow::json::wvalue> UserController::fetchUsers() {

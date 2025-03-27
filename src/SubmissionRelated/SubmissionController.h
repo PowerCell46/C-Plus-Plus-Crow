@@ -12,29 +12,9 @@ public:
 
     static crow::json::wvalue getSubmissions();
     // TODO: Join the data before sending to the user
-    static crow::json::wvalue getSingleSubmission(const int &id);
+    static crow::json::wvalue getSingleSubmission(const int &submissionId);
 
     static crow::json::wvalue alterSubmission(const crow::request &req);
 
-    static crow::json::wvalue deleteSubmission(const int &id);
+    static crow::json::wvalue deleteSubmission(const int &submissionId);
 };
-
-
-// ___________________________________
-// | user_id| questionId | answer    |
-// |_________________________________|
-// | 1      | 1          | my answer |
-// | 1      | 1          | my answer |
-// | 1      | 1          | my answer |
-// | 1      | 1          | my answer |
-// | 1      | 1          | my answer |
-// |_________________________________|
-
-// _________________
-// | id| username  |
-// |_______________|
-// | 1 | PowerCell |
-// | 1 | PowerCell |
-// | 1 | PowerCell |
-// | 1 | PowerCell |
-// |_______________|

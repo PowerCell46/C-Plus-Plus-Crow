@@ -17,23 +17,22 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
     size_t currentSubmissionId = submissions.size() + 1;
 
     crow::json::wvalue users = UserController::createUser(requestBody["username"].s());
-    int userId = std::stoi(users["id"].dump());
+    int userId = std::stoi(users["userId"].dump());
 
     const auto submissionsArray = requestBody["submissions"];
 
     std::ofstream fileStream{SUBMISSIONS_CSV_FILE_PATH, std::ios::app};
 
     for (size_t i = 0; i < submissionsArray.size(); ++i)
-        fileStream <<
-                (currentSubmissionId > 1 ? "\n" : "") << (currentSubmissionId++) << CSV_DELIMITER <<
-                userId << CSV_DELIMITER << submissionsArray[i]["questionId"].i() << CSV_DELIMITER <<
-                submissionsArray[i]["answer"].s();
+        fileStream << (currentSubmissionId > 1 ? "\n" : "") << (currentSubmissionId++) <<
+                CSV_DELIMITER << userId << CSV_DELIMITER << submissionsArray[i]["questionId"].i() <<
+                CSV_DELIMITER << submissionsArray[i]["answer"].s();
 
 
-    // TODO: Change the return type
+    // TODO: Change the return type!
     crow::json::wvalue entry;
-    // entry["submissionId"] = submissionId;
-    entry["username"] = requestBody["username"].s();
+    entry["userId"] = userId;
+    // {}
 
     return entry;
 }
@@ -80,11 +79,11 @@ crow::json::wvalue SubmissionController::getSubmissions() {
 }
 
 
-crow::json::wvalue SubmissionController::getSingleSubmission(const int &id) {
+crow::json::wvalue SubmissionController::getSingleSubmission(const int &submissionId) {
     const auto submissions = SubmissionController::fetchSubmissions();
 
     for (const crow::json::wvalue &submission: submissions)
-        if (submission["id"].dump() == std::to_string(id))
+        if (submission["submissionId"].dump() == std::to_string(submissionId))
             return submission;
 
     return crow::json::wvalue();
@@ -96,7 +95,7 @@ crow::json::wvalue SubmissionController::alterSubmission(const crow::request &re
     if (!requestBody)
         return crow::json::wvalue();
 
-    const int submissionId = requestBody["id"].i();
+    const int submissionId = requestBody["submissionId"].i();
     const std::string newAnswer = requestBody["newAnswer"].s();
     std::string userId, questionId;
 
@@ -126,10 +125,36 @@ crow::json::wvalue SubmissionController::alterSubmission(const crow::request &re
     fileWriteStream << fileBufferStream.str();
 
     crow::json::wvalue entry;
-    entry["id"] = submissionId;
+    entry["submissionId"] = submissionId;
     entry["userId"] = userId;
     entry["questionId"] = questionId;
     entry["newAnswer"] = newAnswer;
+
+    return entry;
+}
+
+
+crow::json::wvalue SubmissionController::deleteSubmission(const int &submissionId) {
+    const std::string submissionIdStr = std::to_string(submissionId);
+
+    std::stringstream fileBufferStream{};
+    std::ifstream fileReadStream{SUBMISSIONS_CSV_FILE_PATH};
+    std::string currentLine;
+
+    while (std::getline(fileReadStream, currentLine)) {
+        std::stringstream currentLineStream{currentLine};
+        std::string currentIdStr;
+        std::getline(currentLineStream, currentIdStr, CSV_DELIMITER);
+
+        if (currentIdStr != submissionIdStr)
+            fileBufferStream << currentLine << '\n';
+    }
+
+    std::ofstream fileWriteStream{SUBMISSIONS_CSV_FILE_PATH};
+    fileWriteStream << fileBufferStream.str();
+
+    crow::json::wvalue entry;
+    entry["id"] = submissionId;
 
     return entry;
 }
