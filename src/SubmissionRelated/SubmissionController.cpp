@@ -19,10 +19,9 @@ crow::json::wvalue SubmissionController::submitSurvey(const crow::request &req) 
     crow::json::wvalue users = UserController::createUser(requestBody["username"].s());
     int userId = std::stoi(users["userId"].dump());
 
-    const auto submissionsArray = requestBody["submissions"];
-
     std::ofstream fileStream{SUBMISSIONS_CSV_FILE_PATH, std::ios::app};
 
+    const auto submissionsArray = requestBody["submissions"];
     for (size_t i = 0; i < submissionsArray.size(); ++i)
         fileStream << (currentSubmissionId > 1 ? "\n" : "") << (currentSubmissionId++) <<
                 CSV_DELIMITER << userId << CSV_DELIMITER << submissionsArray[i]["questionId"].i() <<
@@ -88,11 +87,20 @@ crow::json::wvalue SubmissionController::getSubmissions() {
 
 
 crow::json::wvalue SubmissionController::getSingleSubmission(const int &submissionId) {
-    const auto submissions = SubmissionController::fetchSubmissions();
+    const std::string submissionIdStr = std::to_string(submissionId);
 
-    for (const crow::json::wvalue &submission: submissions)
-        if (submission["submissionId"].dump() == std::to_string(submissionId))
+    std::map<int, std::string> questionsMapping = QuestionController::fetchQuestionsMapping();
+    std::map<int, std::string> usersMapping = UserController::fetchUsersMapping();
+
+    std::vector<crow::json::wvalue> submissions = fetchSubmissions();
+
+    for (crow::json::wvalue& submission : submissions) {
+        if (submission["submissionId"].dump() == submissionIdStr) {
+            submission["username"] = usersMapping[std::stoi(submission["userId"].dump())];
+            submission["question"] = questionsMapping[std::stoi(submission["questionId"].dump())];
             return submission;
+        }
+    }
 
     return crow::json::wvalue();
 }
