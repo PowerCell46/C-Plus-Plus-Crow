@@ -85,6 +85,7 @@ crow::json::wvalue SubmissionController::getSubmissions() {
     return submissions;
 }
 
+// TODO: Use a private method, don't copy the same code twice
 
 crow::json::wvalue SubmissionController::getSingleSubmission(const int &submissionId) {
     const std::string submissionIdStr = std::to_string(submissionId);
@@ -140,13 +141,7 @@ crow::json::wvalue SubmissionController::alterSubmission(const crow::request &re
     std::ofstream fileWriteStream{SUBMISSIONS_CSV_FILE_PATH};
     fileWriteStream << fileBufferStream.str();
 
-    crow::json::wvalue entry;
-    entry["submissionId"] = submissionId;
-    entry["userId"] = userId;
-    entry["questionId"] = questionId;
-    entry["newAnswer"] = newAnswer;
-
-    return entry;
+    return SubmissionController::getSingleSubmission(submissionId);
 }
 
 
